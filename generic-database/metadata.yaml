@@ -1,0 +1,16 @@
+name: generic-database
+summary: Generic-database acting as a proxy + apache + adminer.php 
+maintainer: student <student@student-VirtualBox>
+description: |
+  Todo 
+tags:
+  - ops
+subordinate: false
+provides:
+  website:
+    interface: http
+requires:
+  pgsqldb:
+    interface: pgsql
+  mysqldb:
+    interface: mysql-shared

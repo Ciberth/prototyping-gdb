@@ -1,0 +1,21 @@
+options:
+  admin-pass:
+    type: string
+    default: "admin"
+    description: "pgsql admin pass"
+  port:
+    type: int
+    default: 80
+    description: "Port number for apache"
+  mysqldb-name:
+    type: string
+    default: "mysqldb1"
+    description: "Databasename for mysql"
+  mysqldb-user:
+    type: string
+    default: "admin"
+    description: "Database user for db for mysql"
+  mysqldb-password:
+    type: string
+    default: "admin"
+    description: "Database password for db for mysql"
