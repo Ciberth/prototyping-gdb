@@ -15,27 +15,31 @@ def finishing_up_setting_up_sites():
 def ready():
     host.service_reload('apache2')
     status_set('active', 'apache ready')
+    # temp to set flag here
+    set_flag('gdb.pgsql.requested')
 
-@when('pgsqldb.connected')
+
+@when('pgsqldb.connected', 'gdb.pgsql.requested')
 def request_db(pgsql):
-    pgsql.set_database('mydb_one')
+    pgsql.set_database('mygdb_first')
     status_set('maintenance', 'requesting pgsql db')
 
-@when('config.changed')
-def check_admin_pass():
-    admin_pass = config()['admin-pass']
-    if admin_pass:
-        set_flag('admin-pass')
-    else:
-        clear_flag('admin-pass')
 
-@when('pgsqldb.master.available', 'admin-pass')
-def render_config(pgsql):
-    render('pgsql-config.j2', '/var/www/pgsql/pgsqlconf.html', {
+@when('pgsqldb.master.available', 'gdb.pgsql.requested')
+def render_pgsql_config(pgsql):
+    render('gdb-config.j2', '/var/www/generic-database-charm/gdb-config.html', {
         'db_master': pgsql.master,
-        'db_standbys': pgsql.standbys,
-        'db_conn': pgsql.connection_string,
-        'admin_pass': config('admin-pass'),
+    })
+    clear_flag('gdb.pgsql.requested')
+    set_flag('gdb.pgsql.available')
+    set_flag('restart-app')
+
+# todo ? config changed
+
+@when('pgsqldb.master.available', 'gdb.pgsql.available')
+def new_incoming_relation(pgsql):
+    render('gdb-config.j2', '/var/www/generic-database-charm/gdb-config.html', {
+        'db_master': pgsql.master,
     })
     set_flag('restart-app')
 

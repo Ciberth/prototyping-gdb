@@ -1,5 +1,5 @@
-name: generic-database
-summary: Generic-database acting as a proxy + apache + adminer.php 
+name: generic-database-charm
+summary: Generic-database-charm acting as a proxy + apache + adminer.php 
 maintainer: student <student@student-VirtualBox>
 description: |
   Todo 
@@ -9,6 +9,8 @@ subordinate: false
 provides:
   website:
     interface: http
+  #gdb:
+    #interface: generic-database
 requires:
   pgsqldb:
     interface: pgsql
