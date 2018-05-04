@@ -21,7 +21,7 @@ from charms.reactive import when, when_not, set_flag, clear_flag, when_file_chan
 
 @when('apache.available')
 def finishing_up_setting_up_sites():
-    host.service_reload('apache2')
+    #...
     set_flag('apache.start')
 
 @when('apache.start')
@@ -29,6 +29,7 @@ def ready():
     host.service_reload('apache2')
     status_set('active', 'apache ready')
 
+# hier niet joined?
 @when('generic-database.available')
 def request_type_of_db():
     """
@@ -39,9 +40,12 @@ def request_type_of_db():
     FUTURE: maybe in a future version, the generic-database layer will offer the ability to pass a list of technologies.
     """
     
-    endpoint = endpoint_from_flag(generic-database.available)
+    endpoint = endpoint_from_flag('generic-database.available')
     if endpoint:
         endpoint.request("pgsql")
+        status_set('maintenance', 'requesting pgsql')
+        #clear_flag('generic-database.available')
+        #set_flag('generic-database.pgsql.available')
     else:
         # endpoint is None
         log("Endpoint is None, in request_type_of_db function")
@@ -53,9 +57,9 @@ def pgsql_setup():
     """
     This function will share configuration details such as databasename, username, password.
     """
-    pgsql = endpoint_from_flag(generic-database.pgsql.connected)
+    pgsql = endpoint_from_flag('generic-database.pgsql.connected')
     if pgsql:
-        pgsql.pgsql_configure('mydatabasename', 'myusername', 'mypassword')
+        #pgsql.pgsql_configure('...')
     else:
         log("Endpoint(pgsql) is None in pgsql_setup function")
 
@@ -68,7 +72,7 @@ def pgsql_render_config():
     Configuration details: host(), port(), databasename(), user(), password() 
     """
     
-    pgsql = endpoint_from_flag(generic-database.pgsql.available)
+    pgsql = endpoint_from_flag('generic-database.pgsql.available')
 
     render_template('app-config.j2', '/var/consumer-app/pgsqlconfig.php', {
         'db_host' : pgsql.host(),

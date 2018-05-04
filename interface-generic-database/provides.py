@@ -29,3 +29,11 @@ class GenericDatabase(Endpoint):
 
     
     # def provide_database
+
+    def publish_database_info(self, technology, connection_string):
+        """
+        Publish technology and connectionstring of chosen database
+        """
+        for relation in self.relations:
+            relation.to_publish['technology'] = technology
+            relation.to_publish['connection_string'] = connection_string

@@ -123,3 +123,15 @@ class GenericDatabaseClient(Endpoint):
         return self.all_joined_units.received['keyspace']
 
         
+    def generic-database(self):
+        """
+        Get the published database information
+        """
+        concrete_config = {}
+        # niet ok - er is maar 1 enkele config langs de kant van de generic-database-charm
+        # binnenste lus weg?
+        for relation in self.relations:
+            for unit in relation.units:
+                concrete_config['technology'] = unit.received['technology']
+                concrete_config['connection_string'] = unit.received['connection_string']
+        return concrete_config
